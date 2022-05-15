@@ -1,0 +1,27 @@
+.headerContainer {
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto;
+}
+
+.logo {
+    color: #da552f;
+    font-size: 2rem;
+    line-height: 0;
+    font-weight: 700;
+    font-family: "Roboto Slab", serif;
+    margin-right: 2rem;
+    text-decoration: none;
+}
+
+.logo:hover {
+    cursor: pointer;
+    color: #da552f;
+}
+
+@media (min-width: 768px) {
+    .headerContainer {
+        display: flex;
+        justify-content: space-between;
+    } 
+}
