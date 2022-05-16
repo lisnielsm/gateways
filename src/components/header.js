@@ -19,11 +19,13 @@ const Header = () => {
                 <div style={{display: "flex", alignItems: "center"}}>
                     {user ? (
                         <>
-                            <p style={{marginRight: "2rem"}}>Hello: {user.displayName}</p>
+                            <p style={{marginRight: "2rem", marginBottom: "0"}}>Hello: {user.displayName}</p>
 
                             <Button
-                                variant="text"
-                                size="small"
+                                variant="outlined"
+                                size="medium"
+                                color="primary"
+                                className="menuBtn"
                                 onClick={() => firebase.closeSession()}
                             >
                                 Close Session
@@ -34,8 +36,11 @@ const Header = () => {
                             <Button
                                 component={Link}
                                 to="/login"
-                                variant="text"
-                                size="small"
+                                variant="outlined"
+                                size="medium"
+                                color="primary"
+                                className="menuBtn"
+                                style={{marginRight: "1rem"}}
                             >
                                 Login
                             </Button>
@@ -43,8 +48,10 @@ const Header = () => {
                             <Button
                                 component={Link}
                                 to="/createAccount"
-                                variant="text"
-                                size="small"
+                                variant="outlined"
+                                size="medium"
+                                color="primary"
+                                className="menuBtn"
                             >
                                 Create Account
                             </Button>

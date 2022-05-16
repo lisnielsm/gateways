@@ -2,8 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import firebase, { FirebaseContext } from "./firebase";
 import useAuthentication from './hooks/useAuthentication';
-import MainContainer from './components/mainContainer';
-import Header from './components/header';
+import MainContainer from './components/MainContainer';
+import Header from './components/Header';
+import CreateAccount from './components/CreateAccount';
+import Login from './components/Login';
 
 function App() {
     const user = useAuthentication();
@@ -24,6 +26,8 @@ function App() {
 
                             <Routes>
                                 <Route path='/' element={<MainContainer />} />
+                                <Route path='/createAccount' element={<CreateAccount />} />
+                                <Route path='/login' element={<Login />} />
                             </Routes>
                         </div>
                     </div>

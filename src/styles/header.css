@@ -19,6 +19,11 @@
     color: #da552f;
 }
 
+.menuBtn:hover {
+	background-color: #4a59d9 !important;
+	color: #fff !important;
+}
+
 @media (min-width: 768px) {
     .headerContainer {
         display: flex;
