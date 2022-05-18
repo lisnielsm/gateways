@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import firebase from '../firebase';
+import { login } from "../firebase/firebase";
+import { login as loginNow } from "../slices/userSlice";
+import { useDispatch } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
 import { useNavigate } from "react-router-dom";
@@ -7,12 +9,19 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    async function login() {
+    async function initSession() {
         try {
-            const user = await firebase.login(email, password);
+            const userAuth = await login(email, password);
+            dispatch(loginNow({
+                email: userAuth.user.email,
+                uid: userAuth.user.uid,
+                displayName: userAuth.user.displayName,
+                photoUrl: userAuth.user.photoURL,
+              }));
             return navigate("/");
         } catch (error) {
             console.error("There was an error authenticating the user ", error.message);
@@ -22,7 +31,7 @@ const Login = () => {
     const onSubmitLogin = e => {
         e.preventDefault();
 
-        login();
+        initSession();
     }
 
     const handleBackClick = () => {

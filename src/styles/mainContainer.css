@@ -1,0 +1,15 @@
+.newBtn {
+	outline: none !important;
+	cursor: pointer;
+	text-decoration: none !important;
+	border-radius: 21px !important;
+}
+
+.newBtn:hover {
+	background-color: var(--primary) !important;
+	color: #fff !important;
+}
+
+.grayShadow {
+	box-shadow: 3px 3px 5px #CCC !important;
+}

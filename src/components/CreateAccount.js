@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import firebase from '../firebase';
+import { register } from "../firebase/firebase";
+import { login } from "../slices/userSlice";
+import { useDispatch } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
 import { useNavigate } from "react-router-dom";
@@ -7,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const CreateAccount = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,7 +21,13 @@ const CreateAccount = () => {
 
     async function createAccount() {
         try {
-            await firebase.register(name, email, password);
+            const userAuth = await register(name, email, password);
+            dispatch(login({
+                email: userAuth.user.email,
+                uid: userAuth.user.uid,
+                displayName: userAuth.user.displayName,
+                photoUrl: userAuth.user.photoURL,
+              }));
             return navigate("/");
         } catch (error) {
             console.error("There was an error creating the user ", error.message);

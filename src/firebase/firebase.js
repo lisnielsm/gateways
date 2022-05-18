@@ -1,41 +1,64 @@
-import firebaseConfig from "./config";
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
+
+// const firebaseConfig = {
+//     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+//     authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+//     projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+//     storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+//     messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+//     appId: process.env.REACT_APP_FIREBASE_APP_ID,
+// };
+
+const firebaseConfig = {
+    apiKey: "AIzaSyB4WcjTc8Ezzl844J6HBzv5bK_Gur7c5RY",
+    authDomain: "gateways-d801e.firebaseapp.com",
+    projectId: "gateways-d801e",
+    storageBucket: "gateways-d801e.appspot.com",
+    messagingSenderId: "861405959319",
+    appId: "1:861405959319:web:55071052a169fa3e9545d2",
+};
 
 const app = initializeApp(firebaseConfig);
 
-class Firebase {
-    constructor() {
-        this.db = getFirestore(app);
-        this.storage = getStorage();
-    }
+//init services
+const auth = getAuth();
 
-    // Register a user
-    async register(name, email, password) {
-        const authentication = getAuth();
-        const newUser = await createUserWithEmailAndPassword(authentication, email, password);
+const db = getFirestore(app);
 
-        return await updateProfile(newUser.user, {
-            displayName: name
-        });
-    }
+const storage = getStorage();
 
-    // Login of a user
-    async login(email, password) {
-        const authentication = getAuth();
-        return await signInWithEmailAndPassword(authentication, email, password);
-    }
+// Register a user
+const register = async (name, email, password) => {
+    const authentication = getAuth();
+    const newUser = await createUserWithEmailAndPassword(authentication, email, password);
 
-    // Close the user session
-    async closeSession() {
-        const authentication = getAuth();
-        return await signOut(authentication);
-    }
+    return await updateProfile(newUser.user, {
+        displayName: name
+    });
 }
 
-const firebase = new Firebase();
+// Login of a user
+const login = async (email, password) => {
+    const authentication = getAuth();
+    return await signInWithEmailAndPassword(authentication, email, password);
+}
 
-export default firebase;
+// Close the user session
+const closeSession = async () => {
+    const authentication = getAuth();
+    return await signOut(authentication);
+}
+
+export {
+    auth,
+    db,
+    storage,
+    onAuthStateChanged,
+    register,
+    login,
+    closeSession
+}
 

@@ -5,7 +5,7 @@
 }
 
 .logo {
-    color: #da552f;
+    color: var(--orange);
     font-size: 2rem;
     line-height: 0;
     font-weight: 700;
@@ -16,11 +16,11 @@
 
 .logo:hover {
     cursor: pointer;
-    color: #da552f;
+    color: var(--orange);
 }
 
 .menuBtn:hover {
-	background-color: #4a59d9 !important;
+	background-color: var(--primary) !important;
 	color: #fff !important;
 }
 

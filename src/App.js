@@ -1,23 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import firebase, { FirebaseContext } from "./firebase";
-import useAuthentication from './hooks/useAuthentication';
 import MainContainer from './components/MainContainer';
 import Header from './components/Header';
 import CreateAccount from './components/CreateAccount';
 import Login from './components/Login';
 
+// Redux
+import { store } from './store';
+import { Provider } from 'react-redux';
+
 function App() {
-    const user = useAuthentication();
 
     return (
         <Router>
-            <FirebaseContext.Provider
-                value={{
-                    firebase,
-                    user
-                }}
-            >
+            <Provider store={store}>
+
                 <div className="d-flex flex-column justify-content-between w-100 h-100">
                     <div>
                         <Header />
@@ -39,7 +36,7 @@ function App() {
                         </footer>
                     </div>
                 </div>
-            </FirebaseContext.Provider>
+            </Provider>
         </Router>
     )
 }
