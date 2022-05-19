@@ -4,6 +4,7 @@ import MainContainer from './components/MainContainer';
 import Header from './components/Header';
 import CreateAccount from './components/CreateAccount';
 import Login from './components/Login';
+import NewGateway from './components/NewGateway';
 
 // Redux
 import { store } from './store';
@@ -25,6 +26,7 @@ function App() {
                                 <Route path='/' element={<MainContainer />} />
                                 <Route path='/createAccount' element={<CreateAccount />} />
                                 <Route path='/login' element={<Login />} />
+                                <Route path='/gateways/new' element={<NewGateway />} />
                             </Routes>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { register } from "../firebase/firebase";
-import { login } from "../slices/userSlice";
+import srvUser from "../services/userSlice";
 import { useDispatch } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
@@ -22,12 +22,12 @@ const CreateAccount = () => {
     async function createAccount() {
         try {
             const userAuth = await register(name, email, password);
-            dispatch(login({
-                email: userAuth.user.email,
-                uid: userAuth.user.uid,
-                displayName: userAuth.user.displayName,
-                photoUrl: userAuth.user.photoURL,
-              }));
+            dispatch(srvUser.action.login({
+                email: userAuth.email,
+                uid: userAuth.uid,
+                displayName: userAuth.displayName,
+                photoUrl: userAuth.photoURL,
+            }));
             return navigate("/");
         } catch (error) {
             console.error("There was an error creating the user ", error.message);

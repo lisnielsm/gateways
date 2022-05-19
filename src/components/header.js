@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { logout, selectUser } from "../slices/userSlice";
+import srvUser from "../services/userSlice";
 import { closeSession } from "../firebase/firebase";
 import { Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
@@ -10,14 +10,14 @@ import useAuthentication from '../hooks/useAuthentication';
 
 const Header = () => {
 
-    const user = useAuthentication();
+    useAuthentication();
     const dispatch = useDispatch();
 
-    console.log(user)
+    const user = useSelector(srvUser.selector.user);
 
     const logoutOfApp = () => {
         // dispatch to the store with the logout action
-        dispatch(logout());
+        dispatch(srvUser.action.logout());
         // close session from firebase
         closeSession();
       };

@@ -35,9 +35,11 @@ const register = async (name, email, password) => {
     const authentication = getAuth();
     const newUser = await createUserWithEmailAndPassword(authentication, email, password);
 
-    return await updateProfile(newUser.user, {
+    await updateProfile(newUser.user, {
         displayName: name
     });
+
+    return newUser.user;
 }
 
 // Login of a user
