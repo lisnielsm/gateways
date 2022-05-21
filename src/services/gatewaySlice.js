@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { db } from "../firebase/firebase";
 import Swal from 'sweetalert2';
-import { collection, query, getDocs, addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, query, getDocs, addDoc, deleteDoc, updateDoc, doc, where } from "firebase/firestore";
 
 // Define namespace
 const name = "gateway";
@@ -106,10 +106,12 @@ const onCreateNewGateway = gateway => dispatch => {
 }
 
 // Function that downloads gateways from the database
-const onGetGateways = dispatch => {
+const onGetGateways = user => dispatch => {
 
+    if(!user) return;
+    
     try {
-        const q = query(collection(db, "gateways"));
+        const q = query(collection(db, "gateways"), where ("userId", "==", user.uid));
         getDocs(q)
             .then(querySnapshot => {
                 const gateways = querySnapshot.docs.map(doc => {

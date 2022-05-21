@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { DropzoneArea } from 'material-ui-dropzone';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import srvUser from "../services/userSlice";
 import srvGateway from "../services/gatewaySlice";
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
+// import LoadingButton from '@mui/lab/LoadingButton';
 import { useNavigate } from "react-router-dom";
 
 const NewGateway = () => {
@@ -13,6 +18,9 @@ const NewGateway = () => {
     const [serialNumber, setSerialNumber] = useState("");
     const [name, setName] = useState("");
     const [ip, setIp] = useState("");
+    const [urlImage, setUrlImage] = useState("");
+    const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const user = useSelector(srvUser.selector.user);
 
@@ -20,10 +28,12 @@ const NewGateway = () => {
         e.preventDefault();
 
         dispatch(srvGateway.action.createNewGateway({
+            id: uuidv4(),
             serialNumber,
             name,
             ip,
             userId: user.uid,
+            imageUrl: urlImage,
             devices: []
         }));
 
@@ -33,6 +43,31 @@ const NewGateway = () => {
     const handleBackClick = () => {
         // redirect
         return navigate("/");
+    }
+
+    const handleFileChange = async files => {
+        console.log(files[0])
+        setFile(files[0]);
+
+        setLoading(true);
+
+        try {
+            if (files[0]) {
+                const id = uuidv4();
+                const storageRef = ref(storage, `gateways/${id}`);
+                const uploadTask = await uploadBytesResumable(storageRef, files[0], 'data_url');
+
+                const url = await getDownloadURL(uploadTask.ref);
+
+                console.log(url)
+
+                setLoading(false);
+
+                setUrlImage(url);
+            }
+        } catch (error) {
+            console.error("Error saving the document: ", error);
+        }
     }
 
     return (
@@ -46,6 +81,17 @@ const NewGateway = () => {
                 noValidate={true}
             >
                 <div className="login-form col-12">
+                    <fieldset className="imgFieldset">
+                        <legend>Image</legend>
+                        <div className="text-center mt-3 mb-2">
+                            <DropzoneArea
+                                acceptedFiles={['image/*']}
+                                filesLimit={1}
+                                onChange={handleFileChange}
+                            />
+                        </div>
+                    </fieldset>
+
                     <div className="text-center">
                         <TextValidator
                             name="serialNumber"
@@ -114,9 +160,17 @@ const NewGateway = () => {
                             className="mt-4 ms-0 ms-sm-2 w-100"
                             size="large"
                             color="primary"
+                            disabled={loading}
                         >
                             Create
                         </Button>
+
+                        {/* <LoadingButton
+                            loading={loading}
+                            label="Create"
+                            className="mt-4 ms-0 ms-sm-2 w-100"
+                            disabledLogic={loading}
+                        /> */}
                     </div>
 
                 </div>
