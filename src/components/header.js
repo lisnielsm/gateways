@@ -23,7 +23,7 @@ const Header = () => {
       };
 
     return (
-        <header style={{borderBottom: "2px solid var(--gray2)", padding: "1rem 0"}}>
+        <header className="header">
             <div className="headerContainer">
                 <div style={{display: "flex", alignItems: "center"}}>
                     <Link to="/" className="logo">Gateways</Link>

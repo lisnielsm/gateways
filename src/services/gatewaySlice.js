@@ -25,7 +25,6 @@ export const gatewaySlice = createSlice({
         },
         onCreateGatewaySuccess: (state, action) => {
             state.loading = false;
-            state.gateways = [...state.gateways, action.payload];
             state.error = false;
         },
         onCreateGatewayFail: (state, action) => {
@@ -53,10 +52,10 @@ export const gatewaySlice = createSlice({
             state.gateways = state.gateways.filter(gateway => gateway.id !== state.deletegateway);
             state.deletegateway = null;
         },
-        onGetEditGateway: (state, action) => {
+        onGetDeleteGateway: (state, action) => {
             state.deletegateway = action.payload;
         },
-        onGetDeleteGateway: (state, action) => {
+        onGetEditGateway: (state, action) => {
             state.editgateway = action.payload;
         },
         onEditGatewaySuccess: (state, action) => {
@@ -90,6 +89,7 @@ const onCreateNewGateway = gateway => dispatch => {
     try {
         addDoc(collection(db, "gateways"), gateway)
             .then(data => {
+                gateway.id = data.id;
                 dispatch(onCreateGatewaySuccess(gateway));
 
                 // Alert 

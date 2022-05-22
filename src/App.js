@@ -17,7 +17,7 @@ function App() {
             <Provider store={store}>
 
                 <div className="d-flex flex-column justify-content-between w-100 h-100">
-                    <div>
+                    <div style={{position: "relative"}}>
                         <Header />
 
                         <div className="container mt-5">

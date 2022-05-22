@@ -19,11 +19,19 @@ code {
     monospace;
 }
 
+.fieldset {
+	margin: 1rem 0;
+	border: 1px solid #e1e1e1;
+	font-size: 1rem;
+	padding: 1rem;
+}
+
 .footer {
   width: 100%;
   position: fixed;
   bottom: 0;
   color: var(--gray);
+  background-color: #FFF;
   padding    : 0.5rem;
   font-weight: bold;
 }

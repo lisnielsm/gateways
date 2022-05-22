@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import srvUser from "../services/userSlice";
 import srvGateway from "../services/gatewaySlice";
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
-// import LoadingButton from '@mui/lab/LoadingButton';
+import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router-dom";
+import Peripheral from './Peripheral';
+import Swal from 'sweetalert2';
 
 const NewGateway = () => {
 
@@ -21,6 +23,8 @@ const NewGateway = () => {
     const [urlImage, setUrlImage] = useState("");
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [peripherals, setPeripherals] = useState([]);
+    const [imageId, setImageId] = useState(null);
 
     const user = useSelector(srvUser.selector.user);
 
@@ -28,19 +32,28 @@ const NewGateway = () => {
         e.preventDefault();
 
         dispatch(srvGateway.action.createNewGateway({
-            id: uuidv4(),
             serialNumber,
             name,
             ip,
             userId: user.uid,
             imageUrl: urlImage,
-            devices: []
+            peripherals
         }));
 
         return navigate("/");
     }
 
-    const handleBackClick = () => {
+    const handleBackClick = async () => {
+        // If the image is set, it must be deleted from the storage
+        if(imageId) {
+            try {
+                const fileRef = ref(storage, `gateways/${imageId}`);
+                await deleteObject(fileRef);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
         // redirect
         return navigate("/");
     }
@@ -49,11 +62,11 @@ const NewGateway = () => {
         console.log(files[0])
         setFile(files[0]);
 
-        setLoading(true);
-
         try {
             if (files[0]) {
+                setLoading(true);
                 const id = uuidv4();
+                setImageId(id);
                 const storageRef = ref(storage, `gateways/${id}`);
                 const uploadTask = await uploadBytesResumable(storageRef, files[0], 'data_url');
 
@@ -70,9 +83,35 @@ const NewGateway = () => {
         }
     }
 
+    const handleNewPeripheral = () => {
+        if(peripherals.length === 10) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Maximum reached',
+                text: 'Each gateway has a maximum of 10 peripherals'
+            });
+
+            return;
+        }
+        
+        const newPeripheral = {
+            id: uuidv4(),
+            uid: "",
+            vendor: "",
+            creationDate: Date.now(),
+            status: false
+        }
+
+        setPeripherals([...peripherals, newPeripheral]);
+    }
+
+    const deletePeripheral = id => {
+        setPeripherals(peripherals.filter(peripheral => peripheral.id !== id));
+    }
+
     return (
-        <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
-            <h2 style={{ textAlign: "center", marginTop: "5rem" }}>Create new gateway</h2>
+        <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3" style={{ paddingBottom: "5rem" }}>
+            <h2 style={{ textAlign: "center" }}>Create new gateway</h2>
 
             <ValidatorForm
                 autoComplete="off"
@@ -81,9 +120,9 @@ const NewGateway = () => {
                 noValidate={true}
             >
                 <div className="login-form col-12">
-                    <fieldset className="imgFieldset">
-                        <legend>Image</legend>
-                        <div className="text-center mt-3 mb-2">
+                    <fieldset className="fieldset">
+                        <legend style={{ fontSize: "20px" }}>Image</legend>
+                        <div className="text-center mt-3 mb-1">
                             <DropzoneArea
                                 acceptedFiles={['image/*']}
                                 filesLimit={1}
@@ -143,6 +182,32 @@ const NewGateway = () => {
                         />
                     </div>
 
+                    {peripherals.length > 0 ?
+                        (
+                            peripherals.map(peripheral => (
+                                <Peripheral
+                                    key={peripheral.id}
+                                    element={peripheral}
+                                    peripherals={peripherals}
+                                    setPeripherals={setPeripherals}
+                                    deletePeripheral={deletePeripheral}
+                                />
+                            ))
+                        ) : null}
+
+                    <div className="d-flex justify-content-start w-100">
+                        <Button
+                            variant="outlined"
+                            className="newBtn grayShadow my-3"
+                            startIcon={<AddIcon />}
+                            size="large"
+                            color="primary"
+                            onClick={handleNewPeripheral}
+                        >
+                            New Peripheral
+                        </Button>
+                    </div>
+
                     <div className="d-flex flex-column flex-sm-row w-100">
                         <Button
                             variant="contained"
@@ -164,13 +229,6 @@ const NewGateway = () => {
                         >
                             Create
                         </Button>
-
-                        {/* <LoadingButton
-                            loading={loading}
-                            label="Create"
-                            className="mt-4 ms-0 ms-sm-2 w-100"
-                            disabledLogic={loading}
-                        /> */}
                     </div>
 
                 </div>

@@ -118,12 +118,12 @@ const MainContainer = () => {
         {
             field: 'col5',
             headerName: 'Image',
-            width: 150,
+            width: 70,
             sortable: false,
             renderCell: (cellValues) => {
                 return (
                     <div className="d-flex justify-content-center align-items-center">
-                        <img src={cellValues.row.col5} className="gatewayImage" alt="Image" />
+                        <img src={cellValues.row.col5} className="gatewayImage" alt="" />
                     </div>
                 );
             }
@@ -184,8 +184,8 @@ const MainContainer = () => {
     }
 
     return (
-        <div className="container">
-            <h2 className="mt-5 text-center mb-4" style={{ color: "var(--gray)" }}>Gateways List</h2>
+        <div className="container pb-4 overflow-auto">
+            <h2 className="text-center" style={{ color: "var(--gray)" }}>Gateways List</h2>
 
             <div className="d-flex justify-content-start w-100">
                 <Button
