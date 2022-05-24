@@ -4,6 +4,7 @@ import srvUser from "../services/userSlice";
 import { closeSession } from "../firebase/firebase";
 import { Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
+import { useNavigate } from "react-router-dom";
 
 import "../styles/header.css";
 import useAuthentication from '../hooks/useAuthentication';
@@ -12,6 +13,7 @@ const Header = () => {
 
     useAuthentication();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const user = useSelector(srvUser.selector.user);
 
@@ -22,16 +24,20 @@ const Header = () => {
         closeSession();
       };
 
+      const handleLogoClick = () => {
+          return navigate("/");
+      }
+
     return (
         <header className="header">
             <div className="headerContainer">
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <Link to="/" className="logo">Gateways</Link>
+                    <div className="logo" onClick={handleLogoClick}>Gateways</div>
                 </div>
 
                 <div style={{display: "flex", alignItems: "center"}}>
                     {user ? (
-                        <>
+                        <div className="d-flex flex-wrap align-items-center">
                             <p style={{marginRight: "2rem", marginBottom: "0"}}>Hello: {user.displayName}</p>
 
                             <Button
@@ -43,17 +49,17 @@ const Header = () => {
                             >
                                 Close Session
                             </Button>
-                        </>
+                        </div>
                     ) : (
-                        <>
+                        <div className="d-flex flex-wrap">
                             <Button
+                                id="btnLogin"
                                 component={Link}
                                 to="/login"
                                 variant="outlined"
                                 size="medium"
                                 color="primary"
-                                className="menuBtn"
-                                style={{marginRight: "1rem"}}
+                                className="menuBtn me-3"
                             >
                                 Login
                             </Button>
@@ -68,7 +74,7 @@ const Header = () => {
                             >
                                 Create Account
                             </Button>
-                        </>
+                        </div>
                     )}
 
                 </div>

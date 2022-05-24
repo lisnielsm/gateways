@@ -1,41 +1,42 @@
 .header {
-    border-bottom: 2px solid var(--gray2);
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
+    border-bottom   : 2px solid var(--gray2);
+    padding         : 1rem 0;
+    position        : sticky;
+    top             : 0;
     background-color: #FFF;
-    z-index: 1000;
+    z-index         : 1000;
 }
 
 .headerContainer {
-    max-width: 1200px;
-    width: 95%;
-    margin: 0 auto;
+    max-width      : 1200px;
+    width          : 95%;
+    margin         : 0 auto;
+    display        : flex;
+    justify-content: space-between;
+    flex-wrap      : wrap;
 }
 
 .logo {
-    color: var(--orange);
-    font-size: 2rem;
-    line-height: 0;
-    font-weight: 700;
-    font-family: "Roboto Slab", serif;
-    margin-right: 2rem;
+    color          : var(--orange);
+    font-size      : 2rem;
+    font-weight    : 700;
+    font-family    : "Roboto Slab", serif;
+    margin-right   : 2rem;
     text-decoration: none;
 }
 
 .logo:hover {
     cursor: pointer;
-    color: var(--orange);
+    color : var(--orange);
 }
 
 .menuBtn:hover {
-	background-color: var(--primary) !important;
-	color: #fff !important;
+    background-color: var(--primary) !important;
+    color           : #fff !important;
 }
 
-@media (min-width: 768px) {
-    .headerContainer {
-        display: flex;
-        justify-content: space-between;
-    } 
+@media (max-width: 272px) {
+    #btnLogin {
+        margin-bottom: 0.75rem;
+    }
 }

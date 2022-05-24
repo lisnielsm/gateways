@@ -187,7 +187,7 @@ const MainContainer = () => {
     }
 
     return (
-        <div className="container pb-4 overflow-auto">
+        <div className="container overflow-auto" style={{paddingBottom: "4rem"}}>
             <h2 className="text-center" style={{ color: "var(--gray)" }}>Gateways List</h2>
 
             <div className="d-flex justify-content-start w-100">

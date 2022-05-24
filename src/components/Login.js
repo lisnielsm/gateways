@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { login } from "../firebase/firebase";
 import srvUser from "../services/userSlice";
-import { useDispatch } from 'react-redux';
+import srvGateways from "../services/gatewaySlice";
+import { useDispatch, useSelector } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
 import { useNavigate } from "react-router-dom";
@@ -12,6 +13,17 @@ const Login = () => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const user = useSelector(srvUser.selector.user);
+
+    useEffect(() => {
+
+        if (!user) return;
+
+        return navigate("/");
+
+        // eslint-disable-next-line
+    }, [user])
 
     async function initSession() {
         try {
@@ -25,6 +37,9 @@ const Login = () => {
                 displayName: userAuth.user.displayName,
                 photoUrl: userAuth.user.photoURL,
               }));
+
+              dispatch(srvGateways.action.clearGateways);
+
             return navigate("/");
         } catch (error) {
             console.error("There was an error authenticating the user ", error.message);
