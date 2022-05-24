@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { login } from "../firebase/firebase";
 import srvUser from "../services/userSlice";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,10 @@ const Login = () => {
 
     async function initSession() {
         try {
+            dispatch(srvUser.action.logout());
+
             const userAuth = await login(email, password);
+            
             dispatch(srvUser.action.login({
                 email: userAuth.user.email,
                 uid: userAuth.user.uid,

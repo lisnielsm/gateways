@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
-import srvUser from "../services/userSlice";
 import srvGateway from "../services/gatewaySlice";
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
@@ -13,43 +12,62 @@ import { useNavigate } from "react-router-dom";
 import Peripheral from './Peripheral';
 import Swal from 'sweetalert2';
 
-const NewGateway = () => {
-
+const EditGateway = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [imageId, setImageId] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    const [newgateway, setNewGateway] = useState({
+    const [editgateway, setEditGateway] = useState({
+        id: "",
         serialNumber: "",
         name: "",
         ip: "",
+        userId: "",
         imageUrl: "",
         peripherals: []
     })
 
-    const user = useSelector(srvUser.selector.user);
+    const [imageId, setImageId] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const editGateway = useSelector(srvGateway.selector.editgateway);
+
+    // fill the state automatically
+    useEffect(() => {
+
+        if (!editGateway) return;
+
+        setEditGateway({
+            id: editGateway.id,
+            serialNumber: editGateway.serialNumber,
+            name: editGateway.name,
+            ip: editGateway.ip,
+            userId: editGateway.userId,
+            imageUrl: editGateway.imageUrl,
+            peripherals: editGateway.peripherals
+        });
+
+    }, [editGateway])
 
     // Read the form data
     const onChangeForm = e => {
-        setNewGateway({
-            ...newgateway,
+        setEditGateway({
+            ...editgateway,
             [e.target.name]: e.target.value
         })
     }
 
-    const onSubmitCreate = e => {
+    const submitEditGateway = e => {
         e.preventDefault();
 
-        dispatch(srvGateway.action.createNewGateway({...newgateway, userId: user.uid}, () => {
-            return navigate("/")
-        }));
+        dispatch(srvGateway.action.editGateway(editgateway));
+
+        // redirect
+        return navigate("/");
     }
 
     const handleBackClick = async () => {
         // If the image is set, it must be deleted from the storage
-        if(imageId) {
+        if (imageId) {
             try {
                 const fileRef = ref(storage, `gateways/${imageId}`);
                 await deleteObject(fileRef);
@@ -65,7 +83,7 @@ const NewGateway = () => {
     const handleFileChange = async files => {
 
         try {
-            if (files[0]) {
+            if (files[0] && files[0].name !== "") {
                 setLoading(true);
                 const id = uuidv4();
                 setImageId(id);
@@ -78,7 +96,7 @@ const NewGateway = () => {
 
                 setLoading(false);
 
-                setNewGateway({ ...newgateway, imageUrl: url })
+                setEditGateway({ ...editgateway, imageUrl: url })
             }
         } catch (error) {
             console.error("Error saving the document: ", error);
@@ -86,7 +104,7 @@ const NewGateway = () => {
     }
 
     const handleNewPeripheral = () => {
-        if (newgateway.peripherals.length === 10) {
+        if (editgateway.peripherals.length === 10) {
             Swal.fire({
                 icon: 'error',
                 title: 'Maximum reached',
@@ -104,20 +122,20 @@ const NewGateway = () => {
             status: false
         }
 
-        setNewGateway({ ...newgateway, peripherals: [...newgateway.peripherals, newPeripheral] });
+        setEditGateway({ ...editgateway, peripherals: [...editgateway.peripherals, newPeripheral] });
     }
 
     const deletePeripheral = id => {
-        setNewGateway({ ...newgateway, peripherals: newgateway.peripherals.filter(peripheral => peripheral.id !== id) });
+        setEditGateway({ ...editgateway, peripherals: editgateway.peripherals.filter(peripheral => peripheral.id !== id) });
     }
 
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3" style={{ paddingBottom: "5rem" }}>
-            <h2 style={{ textAlign: "center" }}>Create new gateway</h2>
+            <h2 style={{ textAlign: "center" }}>Edit gateway</h2>
 
             <ValidatorForm
                 autoComplete="off"
-                onSubmit={onSubmitCreate}
+                onSubmit={submitEditGateway}
                 onError={errors => console.debug(errors)}
                 noValidate={true}
             >
@@ -128,6 +146,7 @@ const NewGateway = () => {
                             <DropzoneArea
                                 acceptedFiles={['image/*']}
                                 filesLimit={1}
+                                initialFiles={[editgateway ? editgateway.imageUrl : null]}
                                 onChange={handleFileChange}
                             />
                         </div>
@@ -140,7 +159,7 @@ const NewGateway = () => {
                             label="Serial Number"
                             variant="outlined"
                             margin="normal"
-                            value={newgateway ? newgateway.serialNumber : ""}
+                            value={editgateway ? editgateway.serialNumber : ""}
                             onChange={onChangeForm}
                             fullWidth
                             required={true}
@@ -157,7 +176,7 @@ const NewGateway = () => {
                             label="Name"
                             variant="outlined"
                             margin="normal"
-                            value={newgateway ? newgateway.name : ""}
+                            value={editgateway ? editgateway.name : ""}
                             onChange={onChangeForm}
                             fullWidth
                             required={true}
@@ -174,7 +193,7 @@ const NewGateway = () => {
                             label="IP"
                             variant="outlined"
                             margin="normal"
-                            value={newgateway ? newgateway.ip : ""}
+                            value={editgateway ? editgateway.ip : ""}
                             onChange={onChangeForm}
                             fullWidth
                             required={true}
@@ -184,15 +203,15 @@ const NewGateway = () => {
                         />
                     </div>
 
-                    {newgateway.peripherals.length > 0 ?
+                    {editgateway.peripherals.length > 0 ?
                         (
-                            newgateway.peripherals.map((peripheral, index) => (
+                            editgateway.peripherals.map((peripheral, index) => (
                                 <Peripheral
                                     key={peripheral.id}
                                     element={peripheral}
-                                    gateway={newgateway}
+                                    gateway={editgateway}
                                     index={index + 1}
-                                    setGateway={setNewGateway}
+                                    setGateway={setEditGateway}
                                     deletePeripheral={deletePeripheral}
                                 />
                             ))
@@ -230,7 +249,7 @@ const NewGateway = () => {
                             color="primary"
                             disabled={loading}
                         >
-                            Create
+                            Edit
                         </Button>
                     </div>
 
@@ -241,4 +260,4 @@ const NewGateway = () => {
     )
 }
 
-export default NewGateway;
+export default EditGateway;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -59,29 +59,49 @@ const StatusSwitch = styled((props) => (
     },
 }));
 
-const Peripheral = ({ element, peripherals, setPeripherals, deletePeripheral }) => {
+const Peripheral = ({ element, gateway, index , setGateway, deletePeripheral, detailMode }) => {
 
     const [uid, setUID] = useState("");
     const [vendor, setVendor] = useState("");
     const [status, setStatus] = useState(false);
 
+    const disableFields = detailMode || false;
+
+    useEffect(() => {
+        // Set states for edit mode
+        if (element.uid !== "") {
+            setUID(element.uid);
+        }
+
+        if (element.vendor !== "") {
+            setVendor(element.vendor);
+        }
+
+        if (element.status) {
+            setStatus(element.status);
+        }
+        // eslint-disable-next-line
+    }, [])
+
     const handleUIDChange = e => {
         setUID(e.target.value);
-        setPeripherals(peripherals.map(p => p.id === element.id ? { ...p, uid: e.target.value } : p));
+        setGateway({ ...gateway, peripherals: gateway.peripherals.map(p => p.id === element.id ? { ...p, uid: e.target.value } : p) });
     }
 
     const handleVendorChange = e => {
         setVendor(e.target.value);
-        setPeripherals(peripherals.map(p => p.id === element.id ? { ...p, vendor: e.target.value } : p));
+        setGateway({ ...gateway, peripherals: gateway.peripherals.map(p => p.id === element.id ? { ...p, vendor: e.target.value } : p) });
     }
 
     const handleStatusChange = e => {
-        setPeripherals(peripherals.map(p => p.id === element.id ? { ...p, status: !status } : p));
+        setGateway({ ...gateway, peripherals: gateway.peripherals.map(p => p.id === element.id ? { ...p, status: !status } : p) });
         setStatus(!status);
     }
 
     return (
         <fieldset className="fieldset">
+            <legend className="fieldsetLegend">Peripheral {index}</legend>
+
             <div className="text-center">
                 <TextValidator
                     name="uid"
@@ -92,6 +112,7 @@ const Peripheral = ({ element, peripherals, setPeripherals, deletePeripheral }) 
                     value={uid}
                     onChange={handleUIDChange}
                     fullWidth
+                    disabled={disableFields}
                     required={true}
                     validators={['required']}
                     errorMessages={["The UID is required"]}
@@ -109,6 +130,7 @@ const Peripheral = ({ element, peripherals, setPeripherals, deletePeripheral }) 
                     value={vendor}
                     onChange={handleVendorChange}
                     fullWidth
+                    disabled={disableFields}
                     required={true}
                     validators={['required']}
                     errorMessages={["The vendor is required"]}
@@ -120,18 +142,23 @@ const Peripheral = ({ element, peripherals, setPeripherals, deletePeripheral }) 
                 <Stack direction="row" spacing={1} alignItems="center">
                     <Typography>Offline</Typography>
                     <FormControlLabel
-                        control={<StatusSwitch sx={{ m: 1 }} onChange={handleStatusChange} />}
+                        control={<StatusSwitch sx={{ m: 1 }} checked={status} disabled={disableFields} onChange={handleStatusChange} />}
                     />
                     <Typography>Online</Typography>
                 </Stack>
 
-                <Tooltip title="Delete Peropheral" placement="bottom">
-                    <div className="d-inline">
-                        <IconButton onClick={() => deletePeripheral(element.id)}>
-                            <DeleteIcon style={{color: "var(--bs-red)"}} />
-                        </IconButton>
-                    </div>
-                </Tooltip>
+                {!disableFields ?
+                    (
+                        <Tooltip title="Delete Peropheral" placement="bottom">
+                            <div className="d-inline">
+                                <IconButton onClick={() => deletePeripheral(element.id)}>
+                                    <DeleteIcon style={{ color: "var(--bs-red)" }} />
+                                </IconButton>
+                            </div>
+                        </Tooltip>
+
+                    ) : null
+                }
             </div>
 
         </fieldset>

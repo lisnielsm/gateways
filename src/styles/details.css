@@ -1,0 +1,10 @@
+.detailImg {
+    max-width: 100%;
+    max-height: 300px;
+}
+
+.detailField {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

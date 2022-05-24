@@ -63,16 +63,16 @@ const MainContainer = () => {
     const [pageSize, setPageSize] = useState(20);
 
     const user = useSelector(srvUser.selector.user);
-
     const gateways = useSelector(srvGateways.selector.gateways);
-
-    console.log("Gateways", gateways)
 
     useEffect(() => {
 
-        if(!user) return;
-        console.log(user)
+        if (gateways.length > 0) return;
+
+        if (!user) return;
+
         dispatch(srvGateways.action.getGateways(user));
+
         // eslint-disable-next-line
     }, [user])
 
@@ -95,7 +95,10 @@ const MainContainer = () => {
 
                         <Tooltip title="Delete Gateway" placement="bottom">
                             <div className="d-inline">
-                                <IconButton onClick={() => confirmDeleteGateway(cellValues.id)}>
+                                <IconButton onClick={() => confirmDeleteGateway({
+                                    id: cellValues.row.id,
+                                    imageUrl: cellValues.row.col5
+                                })}>
                                     <DeleteIcon style={{ color: "var(--bs-red)" }} />
                                 </IconButton>
                             </div>
@@ -147,7 +150,7 @@ const MainContainer = () => {
     };
 
     // confirm if user want to delete the gateway
-    const confirmDeleteGateway = id => {
+    const confirmDeleteGateway = gateway => {
 
         Swal.fire({
             title: '¿Are you sure?',
@@ -158,7 +161,7 @@ const MainContainer = () => {
             cancelButtonColor: 'var(--bs-red)',
         }).then(result => {
             if (result.value) {
-                dispatch(srvGateways.action.deleteGateway(id));
+                dispatch(srvGateways.action.deleteGateway(gateway));
             }
         })
     }
@@ -178,9 +181,9 @@ const MainContainer = () => {
         //get the gateway by this id
         const gateway = gateways.find(gateway => gateway.id === id);
 
-        // dispatch(srvGateways.action.getEditGateway(gateway));
-        // // redirect
-        // return navigate(`/gateways/edit/${gateway.id}`);
+        dispatch(srvGateways.action.getDetailGateway(gateway));
+        // redirect
+        return navigate(`/gateways/details/${gateway.id}`);
     }
 
     return (

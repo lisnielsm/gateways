@@ -1,7 +1,7 @@
 :root {
-  --gray  : #6f6f6f;
+  --gray   : #6f6f6f;
   --gray2  : #e1e1e1;
-  --orange: #da552f;
+  --orange : #da552f;
   --primary: #4a59d9;
 }
 
@@ -10,7 +10,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing : antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
@@ -20,18 +20,23 @@ code {
 }
 
 .fieldset {
-	margin: 1rem 0;
-	border: 1px solid #e1e1e1;
-	font-size: 1rem;
-	padding: 1rem;
+  margin   : 1rem 0;
+  border   : 1px solid #e1e1e1;
+  font-size: 1rem;
+  padding  : 1rem;
+}
+
+.fieldsetLegend {
+  font-size: 16px;
 }
 
 .footer {
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  color: var(--gray);
+  width           : 100%;
+  position        : fixed;
+  bottom          : 0;
+  color           : var(--gray);
   background-color: #FFF;
-  padding    : 0.5rem;
-  font-weight: bold;
+  padding         : 0.5rem;
+  z-index         : 100;
+  font-weight     : bold;
 }

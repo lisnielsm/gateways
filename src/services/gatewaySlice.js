@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { db } from "../firebase/firebase";
+import { db, storage } from "../firebase/firebase";
 import Swal from 'sweetalert2';
 import { collection, query, getDocs, addDoc, deleteDoc, updateDoc, doc, where } from "firebase/firestore";
+import { ref, listAll, deleteObject } from "firebase/storage";
 
 // Define namespace
 const name = "gateway";
@@ -11,42 +12,16 @@ export const gatewaySlice = createSlice({
     name,
     initialState: {
         gateways: [],
-        error: null,
-        loading: false,
         deletegateway: null,
-        editgateway: null
+        editgateway: null,
+        detailgateway: null,
     },
     reducers: {
-        onCreateGateway: (state, action) => {
-            state.loading = action.payload
-        },
-        onStartGatewaysDownload: (state, action) => {
-            state.loading = action.payload
-        },
         onCreateGatewaySuccess: (state, action) => {
-            state.loading = false;
-            state.error = false;
-        },
-        onCreateGatewayFail: (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        },
-        onDownloadGatewaysFail: (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        },
-        onDeleteGatewayFail: (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        },
-        onEditGatewayFail: (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
+            state.gateways = [...state.gateways, action.payload];
         },
         onDownloadGatewaysSuccess: (state, action) => {
             state.gateways = action.payload;
-            state.error = null;
-            state.loading = false;
         },
         onDeleteGatewaySuccess: (state, action) => {
             state.gateways = state.gateways.filter(gateway => gateway.id !== state.deletegateway);
@@ -55,8 +30,14 @@ export const gatewaySlice = createSlice({
         onGetDeleteGateway: (state, action) => {
             state.deletegateway = action.payload;
         },
+        onGetClearGateways: (state, action) => {
+            state.gateways = [];
+        },
         onGetEditGateway: (state, action) => {
             state.editgateway = action.payload;
+        },
+        onGetDetailGateway: (state, action) => {
+            state.detailgateway = action.payload;
         },
         onEditGatewaySuccess: (state, action) => {
             state.editgateway = null;
@@ -67,30 +48,23 @@ export const gatewaySlice = createSlice({
 
 // Actions
 export const {
-    onCreateGateway,
-    onStartGatewaysDownload,
     onCreateGatewaySuccess,
-    onCreateGatewayFail,
-    onDownloadGatewaysFail,
-    onDeleteGatewayFail,
-    onEditGatewayFail,
     onDownloadGatewaysSuccess,
     onDeleteGatewaySuccess,
     onGetEditGateway,
+    onGetDetailGateway,
     onGetDeleteGateway,
+    onGetClearGateways,
     onEditGatewaySuccess
 } = gatewaySlice.actions
 
 // create new gateway
-const onCreateNewGateway = gateway => dispatch => {
-
-    dispatch(onCreateGateway(true));
+const onCreateNewGateway = (gateway, callback) => dispatch => {
 
     try {
         addDoc(collection(db, "gateways"), gateway)
             .then(data => {
-                gateway.id = data.id;
-                dispatch(onCreateGatewaySuccess(gateway));
+                dispatch(onCreateGatewaySuccess({ ...gateway, id: data.id }));
 
                 // Alert 
                 Swal.fire(
@@ -98,20 +72,21 @@ const onCreateNewGateway = gateway => dispatch => {
                     'The gateway was added correctly',
                     'success'
                 );
+
+                callback();
             });
     } catch (error) {
         console.error("Error adding document: ", error);
-        dispatch(onCreateGatewayFail(true));
     }
 }
 
 // Function that downloads gateways from the database
 const onGetGateways = user => dispatch => {
 
-    if(!user) return;
-    
+    if (!user) return;
+
     try {
-        const q = query(collection(db, "gateways"), where ("userId", "==", user.uid));
+        const q = query(collection(db, "gateways"), where("userId", "==", user.uid));
         getDocs(q)
             .then(querySnapshot => {
                 const gateways = querySnapshot.docs.map(doc => {
@@ -127,9 +102,6 @@ const onGetGateways = user => dispatch => {
     } catch (error) {
         console.log(error.response);
 
-        // if there is an error change the state
-        dispatch(onDownloadGatewaysFail());
-
         // Error alert
         Swal.fire({
             icon: 'error',
@@ -140,12 +112,29 @@ const onGetGateways = user => dispatch => {
 }
 
 // Select and delete the gateway
-const onDeleteGateway = id => dispatch => {
+const onDeleteGateway = gateway => dispatch => {
 
-    dispatch(onGetDeleteGateway(id));
+    dispatch(onGetDeleteGateway(gateway.id));
+
+    const imageUrl = gateway.imageUrl;
+
+    const listRef = ref(storage, 'gateways/');
+    listAll(listRef)
+        .then((res) => {
+            console.log(res)
+
+            res.items.forEach((itemRef) => {
+                if (imageUrl.includes(itemRef.name)) {
+                    // Delete the image from storage
+                    deleteObject(itemRef);
+                }
+            });
+        }).catch((error) => {
+            console.log(error);
+        });
 
     try {
-        deleteDoc(doc(db, "gateways", id))
+        deleteDoc(doc(db, "gateways", gateway.id))
             .then(data => {
                 dispatch(onDeleteGatewaySuccess());
 
@@ -156,14 +145,23 @@ const onDeleteGateway = id => dispatch => {
                 );
             })
     } catch (error) {
-        console.log(error.response);
-        dispatch(onDeleteGatewayFail(true));
+        console.log(error);
     }
+};
+
+// Clear gateways
+const onClearGateways = dispatch => {
+    dispatch(onGetClearGateways());
 };
 
 // get editing gateway
 const onGetEditGateWay = gateway => dispatch => {
     dispatch(onGetEditGateway(gateway));
+}
+
+// get gateway's details 
+const onGetDetailGateWay = gateway => dispatch => {
+    dispatch(onGetDetailGateway(gateway));
 }
 
 // edit a gateway
@@ -178,7 +176,6 @@ const onEditGateway = gateway => dispatch => {
 
     } catch (error) {
         console.log(error);
-        dispatch(onEditGatewayFail(true));
     }
 }
 
@@ -192,13 +189,14 @@ const Service = {
         deleteGateway: onDeleteGateway,
         getEditGateway: onGetEditGateWay,
         editGateway: onEditGateway,
+        getDetailGateway: onGetDetailGateWay,
+        clearGateways: onClearGateways,
     },
     selector: {
         gateways: (state) => state[name].gateways,
-        error: (state) => state[name].error,
-        loading: (state) => state[name].loading,
         deletegateway: (state) => state[name].deletegateway,
         editgateway: (state) => state[name].editgateway,
+        detailgateway: (state) => state[name].detailgateway,
     },
 }
 

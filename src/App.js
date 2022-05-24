@@ -5,6 +5,9 @@ import Header from './components/Header';
 import CreateAccount from './components/CreateAccount';
 import Login from './components/Login';
 import NewGateway from './components/NewGateway';
+import EditGateway from './components/EditGateway';
+import DetailsGateway from './components/DetailsGateway';
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Redux
 import { store } from './store';
@@ -23,10 +26,12 @@ function App() {
                         <div className="container mt-5">
 
                             <Routes>
-                                <Route path='/' element={<MainContainer />} />
+                                <Route path='/' element={<ProtectedRoute><MainContainer /></ProtectedRoute>} />
                                 <Route path='/createAccount' element={<CreateAccount />} />
                                 <Route path='/login' element={<Login />} />
-                                <Route path='/gateways/new' element={<NewGateway />} />
+                                <Route path='/gateways/new' element={<ProtectedRoute><NewGateway /></ProtectedRoute>} />
+                                <Route path='/gateways/edit/:id' element={<ProtectedRoute><EditGateway /></ProtectedRoute>} />
+                                <Route path='/gateways/details/:id' element={<ProtectedRoute><DetailsGateway /></ProtectedRoute>} />
                             </Routes>
                         </div>
                     </div>
