@@ -48,7 +48,7 @@ const DetailsGateway = () => {
 
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3" style={{ paddingBottom: "5rem" }}>
-            <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>Gateway Details</h2>
+            <h2 data-testid="title" style={{ textAlign: "center", marginBottom: "2rem" }}>Gateway Details</h2>
 
             <ValidatorForm
                 autoComplete="off"
@@ -59,10 +59,11 @@ const DetailsGateway = () => {
 
                 <div className="login-form col-12">
 
-                    <fieldset className="fieldset">
+                    <fieldset data-testid="imgFieldset" className="fieldset">
                         <div className="detailField">
                             <div className="text-center w-100">
                                 <img
+                                    data-testid="image"
                                     id="image"
                                     src={detailgateway.imageUrl}
                                     className="detailImg"
@@ -74,6 +75,7 @@ const DetailsGateway = () => {
 
                     <div className="text-center">
                         <TextField
+                            data-testid="serialNumber"
                             name="serialNumber"
                             placeholder="Serial Number"
                             label="Serial Number"
@@ -88,6 +90,7 @@ const DetailsGateway = () => {
 
                     <div className="text-center">
                         <TextField
+                            data-testid="name"
                             name="name"
                             placeholder="Name"
                             label="Name"
@@ -102,6 +105,7 @@ const DetailsGateway = () => {
 
                     <div className="text-center">
                         <TextField
+                            data-testid="ip"
                             name="ip"
                             placeholder="IP"
                             label="IP"
@@ -128,6 +132,7 @@ const DetailsGateway = () => {
                         ) : null}
 
                     <Button
+                        data-testid="backBtn"
                         variant="contained"
                         className="mt-4 me-0 me-sm-2 w-100"
                         size="large"

@@ -32,7 +32,7 @@ const Header = () => {
         <header className="header">
             <div className="headerContainer">
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <div className="logo" onClick={handleLogoClick}>Gateways</div>
+                    <div data-testid="logo" className="logo" onClick={handleLogoClick}>Gateways</div>
                 </div>
 
                 <div style={{display: "flex", alignItems: "center"}}>
@@ -53,6 +53,7 @@ const Header = () => {
                     ) : (
                         <div className="d-flex flex-wrap">
                             <Button
+                                data-testid="login"
                                 id="btnLogin"
                                 component={Link}
                                 to="/login"
@@ -65,6 +66,7 @@ const Header = () => {
                             </Button>
                             
                             <Button
+                                data-testid="createAccount"
                                 component={Link}
                                 to="/createAccount"
                                 variant="outlined"

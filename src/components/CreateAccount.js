@@ -23,7 +23,7 @@ const CreateAccount = () => {
     async function createAccount() {
         try {
             const userAuth = await register(name, email, password);
-            
+
             dispatch(srvUser.action.logout());
 
             dispatch(srvUser.action.login({
@@ -52,7 +52,7 @@ const CreateAccount = () => {
 
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
-            <h2 style={{ textAlign: "center", marginTop: "5rem" }}>Create account</h2>
+            <h2 data-testid="title" style={{ textAlign: "center", marginTop: "5rem" }}>Create account</h2>
 
             <ValidatorForm
                 autoComplete="off"
@@ -63,6 +63,7 @@ const CreateAccount = () => {
                 <div className="login-form col-12">
                     <div className="text-center">
                         <TextValidator
+                            data-testid="name"
                             name="name"
                             placeholder="Name"
                             label="Name"
@@ -80,6 +81,7 @@ const CreateAccount = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-testid="email"
                             name="email"
                             placeholder="Email"
                             label="Email"
@@ -97,6 +99,7 @@ const CreateAccount = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-testid="password"
                             name="password"
                             placeholder="Password"
                             label="Password"
@@ -115,6 +118,7 @@ const CreateAccount = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-testid="confirmpassword"
                             name="confirmpassword"
                             placeholder="Confirm password"
                             label="Confirm password"
@@ -131,27 +135,17 @@ const CreateAccount = () => {
                         />
                     </div>
 
-                    <div className="d-flex flex-column flex-sm-row w-100">
-                        <Button
-                            variant="contained"
-                            className="mt-4 me-0 me-sm-2 w-100"
-                            size="large"
-                            color="default"
-                            onClick={handleBackClick}
-                        >
-                            Back
-                        </Button>
-
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            className="mt-4 ms-0 ms-sm-2 w-100"
-                            size="large"
-                            color="primary"
-                        >
-                            Create
-                        </Button>
-                    </div>
+                    <Button
+                        data-testid="createBtn"
+                        type="submit"
+                        variant="contained"
+                        className="mt-4"
+                        size="large"
+                        color="primary"
+                        fullWidth
+                    >
+                        Create
+                    </Button>
 
                 </div>
 

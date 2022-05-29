@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const Login = () => {
 
@@ -26,22 +27,28 @@ const Login = () => {
     }, [user])
 
     async function initSession() {
+
         try {
             dispatch(srvUser.action.logout());
 
             const userAuth = await login(email, password);
-            
+
             dispatch(srvUser.action.login({
                 email: userAuth.user.email,
                 uid: userAuth.user.uid,
                 displayName: userAuth.user.displayName,
                 photoUrl: userAuth.user.photoURL,
-              }));
+            }));
 
-              dispatch(srvGateways.action.clearGateways);
+            dispatch(srvGateways.action.clearGateways);
 
             return navigate("/");
         } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Incorrect login',
+                text: 'There was an error with your user or your password'
+            });
             console.error("There was an error authenticating the user ", error.message);
         }
     }
@@ -52,16 +59,12 @@ const Login = () => {
         initSession();
     }
 
-    const handleBackClick = () => {
-        // redirect
-        return navigate("/");
-    }
-
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
-            <h2 style={{ textAlign: "center", marginTop: "5rem" }}>Login</h2>
+            <h2 data-testid="login" style={{ textAlign: "center", marginTop: "5rem" }}>Login</h2>
 
             <ValidatorForm
+                data-testid="form"
                 autoComplete="off"
                 onSubmit={onSubmitLogin}
                 onError={errors => console.debug(errors)}
@@ -70,6 +73,7 @@ const Login = () => {
                 <div className="login-form mt1 col-xs-12">
                     <div className="text-center">
                         <TextValidator
+                            data-testid="email"
                             name="email"
                             placeholder="Email"
                             label="Email"
@@ -79,7 +83,7 @@ const Login = () => {
                             onChange={e => setEmail(e.target.value)}
                             fullWidth
                             required={true}
-                            validators={['required', "isEmail"]}
+                            validators={["required", "isEmail"]}
                             errorMessages={["Email is required", "Please enter a correct email"]}
                             className="mb2"
                         />
@@ -87,6 +91,7 @@ const Login = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-testid="password"
                             name="password"
                             placeholder="Password"
                             label="Password"
@@ -97,33 +102,23 @@ const Login = () => {
                             onChange={e => setPassword(e.target.value)}
                             fullWidth
                             required={true}
-                            validators={['required']}
-                            errorMessages={["Password is required"]}
+                            validators={["required", "minStringLength:6"]}
+                            errorMessages={["Password is required", "Password must have at least 6 characters"]}
                             className="mb2"
                         />
                     </div>
 
-                    <div className="d-flex flex-column flex-sm-row w-100">
-                        <Button
-                            variant="contained"
-                            className="mt-4 me-0 me-sm-2 w-100"
-                            size="large"
-                            color="default"
-                            onClick={handleBackClick}
-                        >
-                            Back
-                        </Button>
-
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            className="mt-4 ms-0 ms-sm-2 w-100"
-                            size="large"
-                            color="primary"
-                        >
-                            Login
-                        </Button>
-                    </div>
+                    <Button
+                        data-testid="loginBtn"
+                        type="submit"
+                        variant="contained"
+                        className="mt-4"
+                        size="large"
+                        color="primary"
+                        fullWidth
+                    >
+                        Login
+                    </Button>
                 </div>
             </ValidatorForm>
         </div>

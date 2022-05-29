@@ -87,7 +87,7 @@ const MainContainer = () => {
                     <div className={classes.root}>
                         <Tooltip title="Edit Gateway" placement="bottom">
                             <div className="d-inline">
-                                <IconButton onClick={() => goToGatewayEdit(cellValues.id)}>
+                                <IconButton id="editBtn" onClick={() => goToGatewayEdit(cellValues.id)}>
                                     <EditIcon color="primary" />
                                 </IconButton>
                             </div>
@@ -95,7 +95,7 @@ const MainContainer = () => {
 
                         <Tooltip title="Delete Gateway" placement="bottom">
                             <div className="d-inline">
-                                <IconButton onClick={() => confirmDeleteGateway({
+                                <IconButton id="deleteBtn" onClick={() => confirmDeleteGateway({
                                     id: cellValues.row.id,
                                     imageUrl: cellValues.row.col5
                                 })}>
@@ -106,7 +106,7 @@ const MainContainer = () => {
 
                         <Tooltip title="Gateway Details" placement="bottom">
                             <div className="d-inline">
-                                <IconButton onClick={() => goToDetails(cellValues.id)}>
+                                <IconButton id="infoBtn" onClick={() => goToDetails(cellValues.id)}>
                                     <InfoIcon style={{ color: "var(--bs-orange)" }} />
                                 </IconButton>
                             </div>
@@ -188,10 +188,11 @@ const MainContainer = () => {
 
     return (
         <div className="container overflow-auto" style={{paddingBottom: "4rem"}}>
-            <h2 className="text-center" style={{ color: "var(--gray)" }}>Gateways List</h2>
+            <h2 data-testid="title" className="text-center" style={{ color: "var(--gray)" }}>Gateways List</h2>
 
             <div className="d-flex justify-content-start w-100">
                 <Button
+                    data-testid="newBtn"
                     component={Link}
                     to="/gateways/new"
                     variant="outlined"
@@ -204,7 +205,7 @@ const MainContainer = () => {
                 </Button>
             </div>
 
-            <Paper elevation={8} sx={{ height: "500px", width: '100%', overflow: 'hidden', marginTop: "1rem" }}>
+            <Paper elevation={8} data-testid="datagrid" sx={{ height: "500px", width: '100%', overflow: 'hidden', marginTop: "1rem" }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}
