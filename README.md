@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# Gateways Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a project that allows the storage, creation, update and deletion of gateway devices. It uses firebase as a database to store devices and images associated with them as well as for user authentication. It is made with Redux-Toolkit to store global states and material ui for visual components.
 
-## Available Scripts
+## Build
 
-In the project directory, you can run:
+This project was created using **create-react-app** command so it can be built using the **npm install** command and it will automatically download all the node modules needed to run the program.
 
-### `npm start`
+## Run
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To run the program just press the command **npm start**.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Test
 
-### `npm test`
+// Pending
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## File and folder structure
 
-### `npm run build`
+"**/**": It contains the package.json files with the project dependencies, the gitignore to select the files or folders that are not included in version control, and this README file.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+"**/public**": It contains the images for the PWA creation for the application and the index.html where the React application is mounted.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+"**/src/\_\_test\_\_**": Contains all the tests of the application.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+"**/src/components**": It is where all the components of the application are located.
 
-### `npm run eject`
+"**/src/firebase**": Firebase configuration.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+"**/src/hooks**": Contains custom hook for authentication.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+"**/src/services**": Contains the user and gateway slices that are exported as a service containing the slice reducer, actions, and state selectors.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+"**src/styles**": Contains components individual styles.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+"**src**": Contains the global styles of the application, the main routing and the store to store the global states.
 
-## Learn More
+## How to use the application
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The first thing that appears when the application is opened is the login page that allows quick authentication with a previously registered username and password, if you have not registered in the application you can go to the CREATE ACCOUNT button (upper right corner) to put your data personal and register in the system. Once authenticated within the system, a table will be displayed with all the gateways created by the authenticated user. If you click on the application logo (with the text Gateways) you can access this page immediately. In the NEW GATEWAY button you can create a new device, a form will open for you to fill in the device data, you can add an image that identifies it, as well as new peripherals if you wish. If you want to go back without creating the device there is a BACK button but if you want to save it you can hit the CREATE button. In the Options column you can see 3 buttons, the first allows editing the device, the second the deletion and the third to see its details. If you want to close the session, you can always do it with the CLOSE SESSION button (upper right corner).
