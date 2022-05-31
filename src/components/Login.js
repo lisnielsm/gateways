@@ -61,7 +61,7 @@ const Login = () => {
 
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
-            <h2 data-testid="login" style={{ textAlign: "center", marginTop: "5rem" }}>Login</h2>
+            <h2 data-cy="title" data-testid="login" style={{ textAlign: "center", marginTop: "5rem" }}>Login</h2>
 
             <ValidatorForm
                 data-testid="form"
@@ -73,6 +73,7 @@ const Login = () => {
                 <div className="login-form mt1 col-xs-12">
                     <div className="text-center">
                         <TextValidator
+                            data-cy="email"
                             data-testid="email"
                             name="email"
                             placeholder="Email"
@@ -91,6 +92,7 @@ const Login = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="password"
                             data-testid="password"
                             name="password"
                             placeholder="Password"
@@ -109,6 +111,7 @@ const Login = () => {
                     </div>
 
                     <Button
+                        data-cy="loginBtn"
                         data-testid="loginBtn"
                         type="submit"
                         variant="contained"

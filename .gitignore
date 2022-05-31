@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 .env
+serviceAccount.json
+cypress.env.json
 
 # testing
 /coverage

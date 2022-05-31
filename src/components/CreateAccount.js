@@ -52,7 +52,7 @@ const CreateAccount = () => {
 
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
-            <h2 data-testid="title" style={{ textAlign: "center", marginTop: "5rem" }}>Create account</h2>
+            <h2 data-cy="title" data-testid="title" style={{ textAlign: "center", marginTop: "5rem" }}>Create account</h2>
 
             <ValidatorForm
                 autoComplete="off"
@@ -63,6 +63,7 @@ const CreateAccount = () => {
                 <div className="login-form col-12">
                     <div className="text-center">
                         <TextValidator
+                            data-cy="name"
                             data-testid="name"
                             name="name"
                             placeholder="Name"
@@ -81,6 +82,7 @@ const CreateAccount = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="email"
                             data-testid="email"
                             name="email"
                             placeholder="Email"
@@ -99,6 +101,7 @@ const CreateAccount = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="password"
                             data-testid="password"
                             name="password"
                             placeholder="Password"
@@ -118,6 +121,7 @@ const CreateAccount = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="confirmpassword"
                             data-testid="confirmpassword"
                             name="confirmpassword"
                             placeholder="Confirm password"
@@ -136,6 +140,7 @@ const CreateAccount = () => {
                     </div>
 
                     <Button
+                        data-cy="createBtn"
                         data-testid="createBtn"
                         type="submit"
                         variant="contained"

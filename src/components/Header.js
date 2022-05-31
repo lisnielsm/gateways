@@ -41,6 +41,7 @@ const Header = () => {
                             <p style={{marginRight: "2rem", marginBottom: "0"}}>Hello: {user.displayName}</p>
 
                             <Button
+                                data-cy="btnCloseSesion"
                                 variant="outlined"
                                 size="medium"
                                 color="primary"
