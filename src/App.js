@@ -26,12 +26,16 @@ function App() {
                         <div className="container mt-5">
 
                             <Routes>
-                                <Route path='/' element={<ProtectedRoute><MainContainer /></ProtectedRoute>} />
+                                {/* <Route path='/' element={<ProtectedRoute><MainContainer /></ProtectedRoute>} /> */}
+                                <Route path='/' element={<MainContainer />} />
                                 <Route path='/createAccount' element={<CreateAccount />} />
                                 <Route path='/login' element={<Login />} />
-                                <Route path='/gateways/new' element={<ProtectedRoute><NewGateway /></ProtectedRoute>} />
+                                {/* <Route path='/gateways/new' element={<ProtectedRoute><NewGateway /></ProtectedRoute>} />
                                 <Route path='/gateways/edit/:id' element={<ProtectedRoute><EditGateway /></ProtectedRoute>} />
-                                <Route path='/gateways/details/:id' element={<ProtectedRoute><DetailsGateway /></ProtectedRoute>} />
+                                <Route path='/gateways/details/:id' element={<ProtectedRoute><DetailsGateway /></ProtectedRoute>} /> */}
+                                <Route path='/gateways/new' element={<NewGateway />} />
+                                <Route path='/gateways/edit/:id' element={<EditGateway />} />
+                                <Route path='/gateways/details/:id' element={<DetailsGateway />} />
                             </Routes>
                         </div>
                     </div>

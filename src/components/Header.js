@@ -32,13 +32,13 @@ const Header = () => {
         <header className="header">
             <div className="headerContainer">
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <div data-testid="logo" className="logo" onClick={handleLogoClick}>Gateways</div>
+                    <div data-cy="logo" data-testid="logo" className="logo" onClick={handleLogoClick}>Gateways</div>
                 </div>
 
                 <div style={{display: "flex", alignItems: "center"}}>
                     {user ? (
                         <div className="d-flex flex-wrap align-items-center">
-                            <p style={{marginRight: "2rem", marginBottom: "0"}}>Hello: {user.displayName}</p>
+                            <p data-cy="greeting" style={{marginRight: "2rem", marginBottom: "0"}}>Hello: {user.displayName}</p>
 
                             <Button
                                 data-cy="btnCloseSesion"
@@ -54,6 +54,7 @@ const Header = () => {
                     ) : (
                         <div className="d-flex flex-wrap">
                             <Button
+                                data-cy="loginHeaderBtn"
                                 data-testid="login"
                                 id="btnLogin"
                                 component={Link}
@@ -67,6 +68,7 @@ const Header = () => {
                             </Button>
                             
                             <Button
+                                data-cy="createAccountBtn"
                                 data-testid="createAccount"
                                 component={Link}
                                 to="/createAccount"

@@ -6,7 +6,7 @@ describe("<Login />", () => {
         cy.log(userId)
 
         // Visit home and redirect to login
-        cy.visit("/");
+        cy.visit("/login");
 
         // Check for Login title
         cy.get("[data-cy=title]")
@@ -90,7 +90,7 @@ describe("<Login />", () => {
     });
 
     // it("Adds document to test_hello_world collection of Firestore", () => {
-    //     cy.callFirestore("add", "test_hello_world", { some: "value" });
+    //     cy.callFirestore("add", "gateways-test", { some: "value" });
     // });
 
 });

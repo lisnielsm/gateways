@@ -99,11 +99,12 @@ const Peripheral = ({ element, gateway, index , setGateway, deletePeripheral, de
     }
 
     return (
-        <fieldset className="fieldset">
+        <fieldset data-cy="peripheral" className="fieldset">
             <legend className="fieldsetLegend">Peripheral {index}</legend>
 
             <div className="text-center">
                 <TextValidator
+                    data-cy="puid"
                     name="uid"
                     placeholder="UID"
                     label="UID"
@@ -122,6 +123,7 @@ const Peripheral = ({ element, gateway, index , setGateway, deletePeripheral, de
 
             <div className="text-center">
                 <TextValidator
+                    data-cy="vendor"
                     name="vendor"
                     placeholder="Vendor"
                     label="Vendor"
@@ -142,7 +144,7 @@ const Peripheral = ({ element, gateway, index , setGateway, deletePeripheral, de
                 <Stack direction="row" spacing={1} alignItems="center">
                     <Typography>Offline</Typography>
                     <FormControlLabel
-                        control={<StatusSwitch sx={{ m: 1 }} checked={status} disabled={disableFields} onChange={handleStatusChange} />}
+                        control={<StatusSwitch data-cy="statusSwitch" sx={{ m: 1 }} checked={status} disabled={disableFields} onChange={handleStatusChange} />}
                     />
                     <Typography>Online</Typography>
                 </Stack>
@@ -151,7 +153,7 @@ const Peripheral = ({ element, gateway, index , setGateway, deletePeripheral, de
                     (
                         <Tooltip title="Delete Peropheral" placement="bottom">
                             <div className="d-inline">
-                                <IconButton onClick={() => deletePeripheral(element.id)}>
+                                <IconButton data-cy="deleteBtn" onClick={() => deletePeripheral(element.id)}>
                                     <DeleteIcon style={{ color: "var(--bs-red)" }} />
                                 </IconButton>
                             </div>

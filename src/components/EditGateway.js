@@ -4,7 +4,8 @@ import { DropzoneArea } from 'material-ui-dropzone';
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
-import srvGateway from "../services/gatewaySlice";
+// import srvGateway from "../services/gatewaySlice";
+import srvGateway from "../services/srvGateway";
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
 import AddIcon from '@mui/icons-material/Add';
@@ -92,8 +93,6 @@ const EditGateway = () => {
 
                 const url = await getDownloadURL(uploadTask.ref);
 
-                console.log(url)
-
                 setLoading(false);
 
                 setEditGateway({ ...editgateway, imageUrl: url })
@@ -131,7 +130,7 @@ const EditGateway = () => {
 
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3" style={{ paddingBottom: "5rem" }}>
-            <h2 style={{ textAlign: "center" }}>Edit gateway</h2>
+            <h2 data-cy="title" style={{ textAlign: "center" }}>Edit gateway</h2>
 
             <ValidatorForm
                 autoComplete="off"
@@ -139,8 +138,8 @@ const EditGateway = () => {
                 onError={errors => console.debug(errors)}
                 noValidate={true}
             >
-                <div className="login-form col-12">
-                    <fieldset className="fieldset">
+                <div data-cy="gatewayContainer" className="login-form col-12">
+                    <fieldset data-cy="imgContainer" className="fieldset">
                         <legend style={{ fontSize: "20px" }}>Image</legend>
                         <div className="text-center mt-3 mb-1">
                             <DropzoneArea
@@ -154,6 +153,7 @@ const EditGateway = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="serialNumber"
                             name="serialNumber"
                             placeholder="Serial Number"
                             label="Serial Number"
@@ -171,6 +171,7 @@ const EditGateway = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="name"
                             name="name"
                             placeholder="Name"
                             label="Name"
@@ -188,6 +189,7 @@ const EditGateway = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="ip"
                             name="ip"
                             placeholder="IP"
                             label="IP"
@@ -203,22 +205,26 @@ const EditGateway = () => {
                         />
                     </div>
 
-                    {editgateway.peripherals.length > 0 ?
-                        (
-                            editgateway.peripherals.map((peripheral, index) => (
-                                <Peripheral
-                                    key={peripheral.id}
-                                    element={peripheral}
-                                    gateway={editgateway}
-                                    index={index + 1}
-                                    setGateway={setEditGateway}
-                                    deletePeripheral={deletePeripheral}
-                                />
-                            ))
-                        ) : null}
+                    <div data-cy="peripherals">
+                        {editgateway.peripherals.length > 0 ?
+                            (
+                                editgateway.peripherals.map((peripheral, index) => (
+                                    <Peripheral
+                                        data-cy="peripheral"
+                                        key={peripheral.id}
+                                        element={peripheral}
+                                        gateway={editgateway}
+                                        index={index + 1}
+                                        setGateway={setEditGateway}
+                                        deletePeripheral={deletePeripheral}
+                                    />
+                                ))
+                            ) : null}
+                    </div>
 
                     <div className="d-flex justify-content-start w-100">
                         <Button
+                            data-cy="newPeripheralBtn"
                             variant="outlined"
                             className="newBtn grayShadow my-3"
                             startIcon={<AddIcon />}
@@ -232,6 +238,7 @@ const EditGateway = () => {
 
                     <div className="d-flex flex-column flex-sm-row w-100">
                         <Button
+                            data-cy="backBtn"
                             variant="contained"
                             className="mt-4 me-0 me-sm-2 w-100"
                             size="large"
@@ -242,6 +249,7 @@ const EditGateway = () => {
                         </Button>
 
                         <Button
+                            data-cy="editBtn"
                             type="submit"
                             variant="contained"
                             className="mt-4 ms-0 ms-sm-2 w-100"

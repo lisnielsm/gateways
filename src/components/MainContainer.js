@@ -9,7 +9,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from '@mui/x-data-grid';
-import srvGateways from "../services/gatewaySlice";
+// import srvGateways from "../services/gatewaySlice";
+import srvGateways from "../services/srvGateway";
 import srvUser from "../services/userSlice";
 
 import "../styles/mainContainer.css";
@@ -87,7 +88,7 @@ const MainContainer = () => {
                     <div className={classes.root}>
                         <Tooltip title="Edit Gateway" placement="bottom">
                             <div className="d-inline">
-                                <IconButton id="editBtn" onClick={() => goToGatewayEdit(cellValues.id)}>
+                                <IconButton data-cy="editBtn" id="editBtn" onClick={() => goToGatewayEdit(cellValues.id)}>
                                     <EditIcon color="primary" />
                                 </IconButton>
                             </div>
@@ -95,7 +96,7 @@ const MainContainer = () => {
 
                         <Tooltip title="Delete Gateway" placement="bottom">
                             <div className="d-inline">
-                                <IconButton id="deleteBtn" onClick={() => confirmDeleteGateway({
+                                <IconButton data-cy="deleteBtn" id="deleteBtn" onClick={() => confirmDeleteGateway({
                                     id: cellValues.row.id,
                                     imageUrl: cellValues.row.col5
                                 })}>
@@ -106,7 +107,7 @@ const MainContainer = () => {
 
                         <Tooltip title="Gateway Details" placement="bottom">
                             <div className="d-inline">
-                                <IconButton id="infoBtn" onClick={() => goToDetails(cellValues.id)}>
+                                <IconButton data-cy="infoBtn" id="infoBtn" onClick={() => goToDetails(cellValues.id)}>
                                     <InfoIcon style={{ color: "var(--bs-orange)" }} />
                                 </IconButton>
                             </div>
@@ -192,6 +193,7 @@ const MainContainer = () => {
 
             <div className="d-flex justify-content-start w-100">
                 <Button
+                    data-cy="newBtn"
                     data-testid="newBtn"
                     component={Link}
                     to="/gateways/new"
@@ -205,7 +207,7 @@ const MainContainer = () => {
                 </Button>
             </div>
 
-            <Paper elevation={8} data-testid="datagrid" sx={{ height: "500px", width: '100%', overflow: 'hidden', marginTop: "1rem" }}>
+            <Paper elevation={8} data-cy="datagrid" data-testid="datagrid" sx={{ height: "500px", width: '100%', overflow: 'hidden', marginTop: "1rem" }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}

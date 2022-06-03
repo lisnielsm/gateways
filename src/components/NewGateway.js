@@ -5,7 +5,8 @@ import { ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "fireba
 import { storage } from '../firebase/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import srvUser from "../services/userSlice";
-import srvGateway from "../services/gatewaySlice";
+// import srvGateway from "../services/gatewaySlice";
+import srvGateway from "../services/srvGateway";
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Button } from '@material-ui/core';
 import AddIcon from '@mui/icons-material/Add';
@@ -74,8 +75,6 @@ const NewGateway = () => {
 
                 const url = await getDownloadURL(uploadTask.ref);
 
-                console.log(url)
-
                 setLoading(false);
 
                 setNewGateway({ ...newgateway, imageUrl: url })
@@ -113,16 +112,17 @@ const NewGateway = () => {
 
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3" style={{ paddingBottom: "5rem" }}>
-            <h2 style={{ textAlign: "center" }}>Create new gateway</h2>
+            <h2 data-cy="title" style={{ textAlign: "center" }}>Create new gateway</h2>
 
             <ValidatorForm
+                data-cy="newGatewayForm"
                 autoComplete="off"
                 onSubmit={onSubmitCreate}
                 onError={errors => console.debug(errors)}
                 noValidate={true}
             >
-                <div className="login-form col-12">
-                    <fieldset className="fieldset">
+                <div data-cy="gatewayContainer" className="login-form col-12">
+                    <fieldset data-cy="imgContainer" className="fieldset">
                         <legend style={{ fontSize: "20px" }}>Image</legend>
                         <div className="text-center mt-3 mb-1">
                             <DropzoneArea
@@ -135,6 +135,7 @@ const NewGateway = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="serialNumber"
                             name="serialNumber"
                             placeholder="Serial Number"
                             label="Serial Number"
@@ -152,6 +153,7 @@ const NewGateway = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="name"
                             name="name"
                             placeholder="Name"
                             label="Name"
@@ -169,6 +171,7 @@ const NewGateway = () => {
 
                     <div className="text-center">
                         <TextValidator
+                            data-cy="ip"
                             name="ip"
                             placeholder="IP"
                             label="IP"
@@ -184,22 +187,25 @@ const NewGateway = () => {
                         />
                     </div>
 
-                    {newgateway.peripherals.length > 0 ?
-                        (
-                            newgateway.peripherals.map((peripheral, index) => (
-                                <Peripheral
-                                    key={peripheral.id}
-                                    element={peripheral}
-                                    gateway={newgateway}
-                                    index={index + 1}
-                                    setGateway={setNewGateway}
-                                    deletePeripheral={deletePeripheral}
-                                />
-                            ))
-                        ) : null}
+                    <div data-cy="peripherals">
+                        {newgateway.peripherals.length > 0 ?
+                            (
+                                newgateway.peripherals.map((peripheral, index) => (
+                                    <Peripheral
+                                        key={peripheral.id}
+                                        element={peripheral}
+                                        gateway={newgateway}
+                                        index={index + 1}
+                                        setGateway={setNewGateway}
+                                        deletePeripheral={deletePeripheral}
+                                    />
+                                ))
+                            ) : null}
+                    </div>
 
                     <div className="d-flex justify-content-start w-100">
                         <Button
+                            data-cy="newPeripheralBtn"
                             variant="outlined"
                             className="newBtn grayShadow my-3"
                             startIcon={<AddIcon />}
@@ -213,6 +219,7 @@ const NewGateway = () => {
 
                     <div className="d-flex flex-column flex-sm-row w-100">
                         <Button
+                            data-cy="backBtn"
                             variant="contained"
                             className="mt-4 me-0 me-sm-2 w-100"
                             size="large"
@@ -223,6 +230,7 @@ const NewGateway = () => {
                         </Button>
 
                         <Button
+                            data-cy="newGatewayBtn"
                             type="submit"
                             variant="contained"
                             className="mt-4 ms-0 ms-sm-2 w-100"
