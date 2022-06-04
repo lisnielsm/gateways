@@ -1,5 +1,9 @@
 /// <reference types="cypress" />
 
+import { onCreateGatewaySuccess } from "../../src/services/gatewaySlice";
+
+const dispatch = action => cy.window().its('store').invoke('dispatch', action);
+
 describe("<NewGateway />", () => {
     it("<NewGateway /> Validations and alerts", () => {
         cy.visit("/gateways/new");
@@ -88,23 +92,26 @@ describe("<NewGateway />", () => {
         cy.get("[data-cy=newPeripheralBtn]").click();
 
         cy.get("[data-cy=peripherals] [data-cy=peripheral]").should("have.length", 2);
-        
+
         cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=deleteBtn]").click();
-        
+
         cy.get("[data-cy=peripherals] [data-cy=peripheral]").should("have.length", 1);
-        
+
         cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=deleteBtn]").click();
-        
+
         cy.get("[data-cy=peripherals] [data-cy=peripheral]").should("have.length", 0);
 
     });
 
     it("<NewGateway /> Create a new gateway", () => {
-        // Clear de previous data 
+        const TEST_UID = Cypress.env("TEST_UID");
+        
         const newGateway = {
+            id: 1,
             serialNumber: "HIUT987T",
             name: "Switch CISCO L2",
             ip: "192.25.63.87",
+            uid: TEST_UID,
             peripherals: [
                 {
                     uid: "UID01",
@@ -118,7 +125,8 @@ describe("<NewGateway />", () => {
                 }
             ]
         }
-
+        
+        // Clear de previous data 
         cy.visit("/");
         cy.visit("/gateways/new");
 
@@ -140,9 +148,30 @@ describe("<NewGateway />", () => {
 
         cy.get("[data-cy=peripherals] [data-cy=peripheral]").should("have.length", 2);
 
-        cy.get("[data-cy=newGatewayBtn]").click();
+        
+        cy.visit("/");
+        
+        dispatch(onCreateGatewaySuccess(newGateway));
 
-        cy.get("[data-cy=title]").should("not.exist");
+        const getGateways = (win) => win.store.getState().gateway.gateways;
+
+        cy.window().pipe(getGateways).should('have.length', 1)
+
+        cy.window().its('store').invoke('getState').should('deep.equal', {
+            gateway: {
+                gateways: [{...newGateway}],
+                deletegateway: null,
+                editgateway: null,
+                detailgateway: null,
+            },
+            user: {
+                user: null
+            },
+        })
+
+        cy.get("[data-cy=datagrid] div.MuiDataGrid-row:nth-child(1) div.MuiDataGrid-cellContent").eq(0).invoke("text").should("equal", newGateway.serialNumber);
+        cy.get("[data-cy=datagrid] div.MuiDataGrid-row:nth-child(1) div.MuiDataGrid-cellContent").eq(1).invoke("text").should("equal", newGateway.name);
+        cy.get("[data-cy=datagrid] div.MuiDataGrid-row:nth-child(1) div.MuiDataGrid-cellContent").eq(2).invoke("text").should("equal", newGateway.ip);
 
     });
 

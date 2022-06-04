@@ -92,7 +92,9 @@ describe("<CreateAccount />", () => {
 
         cy.get("[data-cy=createBtn]").click();
 
-        cy.login();
+        //cy.login();
+
+        cy.visit("/");
 
         // From home
         cy.get("[data-cy=title]")
@@ -100,7 +102,8 @@ describe("<CreateAccount />", () => {
             .invoke("text")
             .should("equal", "Gateways List");
 
-        cy.get("[data-cy=btnCloseSesion]").click();
+        // cy.get("[data-cy=btnCloseSesion]").should("exist").invoke("text").should("equal", "Close Session"); 
+        // cy.get("[data-cy=btnCloseSesion]").click();
     });
 
 });

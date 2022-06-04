@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { login } from "../firebase/firebase";
 import srvUser from "../services/userSlice";
-// import srvGateways from "../services/gatewaySlice";
 import srvGateways from "../services/srvGateway";
 import { useDispatch, useSelector } from 'react-redux';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';

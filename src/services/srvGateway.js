@@ -91,7 +91,7 @@ const onDeleteGateway = gateway => dispatch => {
     try {
         deleteDoc(doc(db, "gateways", gateway.id))
             .then(data => {
-                dispatch(onDeleteGatewaySuccess());
+                dispatch(onDeleteGatewaySuccess(gateway.id));
 
                 Swal.fire(
                     'Deleted',

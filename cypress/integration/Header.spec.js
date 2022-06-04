@@ -42,22 +42,22 @@ describe("<Header />", () => {
             .should("equal", "Create account");
     });
 
-    it("<Header /> With an autheticated user", () => {
-        cy.visit("/login");
+    // it("<Header /> With an autheticated user", () => {
+    //     cy.visit("/login");
 
-        cy.login();
+    //     cy.login();
 
-        cy.get("[data-cy=greeting]")
-            .should("exist")
-            .invoke("text")
-            .should("equal", "Hello Lisniel")
+    //     cy.get("[data-cy=greeting]")
+    //         .should("exist")
+    //         .invoke("text")
+    //         .should("equal", "Hello Lisniel")
 
-        cy.get("[data-cy=btnCloseSesion]")
-            .should("exist")
-            .invoke("text")
-            .should("equal", "Close Session")
+    //     cy.get("[data-cy=btnCloseSesion]")
+    //         .should("exist")
+    //         .invoke("text")
+    //         .should("equal", "Close Session")
 
-        cy.get("[data-cy=loginHeaderBtn]").should("not.exist");
-        cy.get("[data-cy=createAccountBtn]").should("not.exist");
-    });
+    //     cy.get("[data-cy=loginHeaderBtn]").should("not.exist");
+    //     cy.get("[data-cy=createAccountBtn]").should("not.exist");
+    // });
 });

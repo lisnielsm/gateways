@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 // import firebase from "firebase/compat/app";
 // import "firebase/compat/firestore";
-import { onCreateGatewaySuccess, onEditGatewaySuccess } from "../../src/services/gatewaySlice";
+import { onCreateGatewaySuccess, onEditGatewaySuccess, onDeleteGatewaySuccess } from "../../src/services/gatewaySlice";
 
 const dispatch = action => cy.window().its('store').invoke('dispatch', action);
 
@@ -23,6 +23,26 @@ const newGateway = {
             uid: "UID02",
             vendor: "Vendor02",
             status: false
+        }
+    ]
+}
+
+const editGateway = {
+    id: 1,
+    serialNumber: "ALLIDG897",
+    name: "Router M2",
+    ip: "192.53.48.12",
+    uid: TEST_UID,
+    peripherals: [
+        {
+            uid: "UID001",
+            vendor: "Vendor001",
+            status: false,
+        },
+        {
+            uid: "UID002",
+            vendor: "Vendor002",
+            status: true
         }
     ]
 }
@@ -177,35 +197,15 @@ describe("<MainContainer />", () => {
         cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=statusSwitch] input").should("not.be.checked");
 
         // change the values and edit the gateway, then check that the gateway changed its values correctly
-        const editGateway = {
-            id: 1,
-            serialNumber: "ALLIDG897",
-            name: "Router M2",
-            ip: "192.53.48.12",
-            uid: TEST_UID,
-            peripherals: [
-                {
-                    uid: "UID001",
-                    vendor: "Vendor001",
-                    status: false,
-                },
-                {
-                    uid: "UID002",
-                    vendor: "Vendor002",
-                    status: true
-                }
-            ]
-        }
-
-        cy.get("[data-cy=serialNumber] input").clear({force: true}).type(editGateway.serialNumber);
-        cy.get("[data-cy=name] input").clear({force: true}).type(editGateway.name);
-        cy.get("[data-cy=ip] input").clear({force: true}).type(editGateway.ip);
-        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=puid] input").clear({force: true}).type(editGateway.peripherals[0].uid);
-        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=vendor] input").clear({force: true}).type(editGateway.peripherals[0].vendor);
-        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=statusSwitch] input").uncheck({force: true});
-        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=puid] input").clear({force: true}).type(editGateway.peripherals[1].uid);
-        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=vendor] input").clear({force: true}).type(editGateway.peripherals[1].vendor);
-        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=statusSwitch] input").check({force: true});
+        cy.get("[data-cy=serialNumber] input").clear({ force: true }).type(editGateway.serialNumber);
+        cy.get("[data-cy=name] input").clear({ force: true }).type(editGateway.name);
+        cy.get("[data-cy=ip] input").clear({ force: true }).type(editGateway.ip);
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=puid] input").clear({ force: true }).type(editGateway.peripherals[0].uid);
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=vendor] input").clear({ force: true }).type(editGateway.peripherals[0].vendor);
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=statusSwitch] input").uncheck({ force: true });
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=puid] input").clear({ force: true }).type(editGateway.peripherals[1].uid);
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=vendor] input").clear({ force: true }).type(editGateway.peripherals[1].vendor);
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=statusSwitch] input").check({ force: true });
 
         // edit gateway in redux
         dispatch(onEditGatewaySuccess(editGateway));
@@ -215,6 +215,100 @@ describe("<MainContainer />", () => {
         cy.get("[data-cy=datagrid] div.MuiDataGrid-row:nth-child(1) div.MuiDataGrid-cellContent").eq(0).invoke("text").should("equal", editGateway.serialNumber);
         cy.get("[data-cy=datagrid] div.MuiDataGrid-row:nth-child(1) div.MuiDataGrid-cellContent").eq(1).invoke("text").should("equal", editGateway.name);
         cy.get("[data-cy=datagrid] div.MuiDataGrid-row:nth-child(1) div.MuiDataGrid-cellContent").eq(2).invoke("text").should("equal", editGateway.ip);
+    });
 
+    it("<MainContainer /> Delete a gateway in datagrid", () => {
+        // Delete the second gateway
+        cy.get("[data-cy=datagrid] div.MuiDataGrid-row:nth-child(1) div.d-inline:nth-child(2) button.MuiButtonBase-root.MuiIconButton-root")
+            .should("exist")
+            .should("have.id", "deleteBtn")
+            .click();
+
+        // Sweetalert2 show
+        cy.get('.swal2-container').should("exist");
+        cy.get('.swal2-container h2.swal2-title')
+            .should("exist")
+            .invoke("text")
+            .should("equal", "¿Are you sure?");
+
+        cy.get('.swal2-container div.swal2-html-container')
+            .should("exist")
+            .invoke("text")
+            .should("equal", "A product that is deleted cannot be recovered");
+
+        cy.get('.swal2-container button.swal2-confirm.swal2-styled').click();
+
+        // delete gateway in redux
+        dispatch(onDeleteGatewaySuccess(2));
+
+        const getGateways = (win) => win.store.getState().gateway.gateways;
+
+        cy.window().pipe(getGateways).should('have.length', 1)
+
+        cy.get("[data-cy=datagrid] div.MuiDataGrid-row").should("have.length", 1);
+    });
+
+    it("<MainContainer /> Get the details of a gateway in datagrid", () => {
+        // Click on details
+        cy.get("[data-cy=datagrid] div.MuiDataGrid-row:nth-child(1) div.d-inline:nth-child(3) button.MuiButtonBase-root.MuiIconButton-root")
+            .should("exist")
+            .should("have.id", "infoBtn")
+            .click();
+
+        cy.get("[data-cy=title]").should("exist").invoke("text").should("equal", "Gateway Details");
+
+        cy.get("[data-cy=serialNumber] input")
+            .should("exist")
+            .should("have.attr", "name", "serialNumber")
+            .should('have.attr', 'placeholder', 'Serial Number')
+            .should('have.attr', 'value', editGateway.serialNumber)
+
+        cy.get("[data-cy=name] input")
+            .should("exist")
+            .should("have.attr", "name", "name")
+            .should('have.attr', 'placeholder', 'Name')
+            .should('have.attr', 'value', editGateway.name)
+
+        cy.get("[data-cy=ip] input")
+            .should("exist")
+            .should("have.attr", "name", "ip")
+            .should('have.attr', 'placeholder', 'IP')
+            .should('have.attr', 'value', editGateway.ip)
+
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]").should("have.length", editGateway.peripherals.length);
+
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=puid] input")
+            .should("exist")
+            .should("have.attr", "name", "uid")
+            .should('have.attr', 'placeholder', 'UID')
+            .should('have.attr', 'value', editGateway.peripherals[0].uid);
+
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=vendor] input")
+            .should("exist")
+            .should("have.attr", "name", "vendor")
+            .should('have.attr', 'placeholder', 'Vendor')
+            .should('have.attr', 'value', editGateway.peripherals[0].vendor);
+
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(1) [data-cy=statusSwitch] input").should("not.be.checked");
+
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=puid] input")
+            .should("exist")
+            .should("have.attr", "name", "uid")
+            .should('have.attr', 'placeholder', 'UID')
+            .should('have.attr', 'value', editGateway.peripherals[1].uid);
+
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=vendor] input")
+            .should("exist")
+            .should("have.attr", "name", "vendor")
+            .should('have.attr', 'placeholder', 'Vendor')
+            .should('have.attr', 'value', editGateway.peripherals[1].vendor);
+
+        cy.get("[data-cy=peripherals] [data-cy=peripheral]:nth-child(2) [data-cy=statusSwitch] input").should("be.checked");
+
+        // Click on Back button
+        cy.get("[data-cy=backBtn]").should("exist").invoke("text").should("equal", "Back");
+        cy.get("[data-cy=backBtn]").click();
+
+        cy.get("[data-cy=title]").should("exist").invoke("text").should("not.equal", "Gateway Details").should("equal", "Gateways List");
     });
 });

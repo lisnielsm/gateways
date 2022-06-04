@@ -20,7 +20,7 @@ export const gatewaySlice = createSlice({
             state.gateways = action.payload;
         },
         onDeleteGatewaySuccess: (state, action) => {
-            state.gateways = state.gateways.filter(gateway => gateway.id !== state.deletegateway);
+            state.gateways = state.gateways.filter(gateway => gateway.id !== action.payload);
             state.deletegateway = null;
         },
         onGetDeleteGateway: (state, action) => {

@@ -49,7 +49,7 @@ const DetailsGateway = () => {
 
     return (
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3" style={{ paddingBottom: "5rem" }}>
-            <h2 data-testid="title" style={{ textAlign: "center", marginBottom: "2rem" }}>Gateway Details</h2>
+            <h2 data-cy="title" data-testid="title" style={{ textAlign: "center", marginBottom: "2rem" }}>Gateway Details</h2>
 
             <ValidatorForm
                 autoComplete="off"
@@ -60,7 +60,7 @@ const DetailsGateway = () => {
 
                 <div className="login-form col-12">
 
-                    <fieldset data-testid="imgFieldset" className="fieldset">
+                    <fieldset data-cy="imgContainer" data-testid="imgFieldset" className="fieldset">
                         <div className="detailField">
                             <div className="text-center w-100">
                                 <img
@@ -76,6 +76,7 @@ const DetailsGateway = () => {
 
                     <div className="text-center">
                         <TextField
+                            data-cy="serialNumber"
                             data-testid="serialNumber"
                             name="serialNumber"
                             placeholder="Serial Number"
@@ -91,6 +92,7 @@ const DetailsGateway = () => {
 
                     <div className="text-center">
                         <TextField
+                            data-cy="name"
                             data-testid="name"
                             name="name"
                             placeholder="Name"
@@ -106,6 +108,7 @@ const DetailsGateway = () => {
 
                     <div className="text-center">
                         <TextField
+                            data-cy="ip"
                             data-testid="ip"
                             name="ip"
                             placeholder="IP"
@@ -119,20 +122,23 @@ const DetailsGateway = () => {
                         />
                     </div>
 
-                    {detailgateway.peripherals.length > 0 ?
-                        (
-                            detailgateway.peripherals.map((peripheral, index) => (
-                                <Peripheral
-                                    key={peripheral.id}
-                                    element={peripheral}
-                                    gateway={detailgateway}
-                                    index={index + 1}
-                                    detailMode={true}
-                                />
-                            ))
-                        ) : null}
+                    <div data-cy="peripherals">
+                        {detailgateway.peripherals.length > 0 ?
+                            (
+                                detailgateway.peripherals.map((peripheral, index) => (
+                                    <Peripheral
+                                        key={peripheral.id}
+                                        element={peripheral}
+                                        gateway={detailgateway}
+                                        index={index + 1}
+                                        detailMode={true}
+                                    />
+                                ))
+                            ) : null}
+                    </div>
 
                     <Button
+                        data-cy="backBtn"
                         data-testid="backBtn"
                         variant="contained"
                         className="mt-4 me-0 me-sm-2 w-100"
