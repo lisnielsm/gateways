@@ -25,7 +25,7 @@ This project uses 2 different technologies to test the components. Testing-libra
 ```
 npm run test
 ```
-It must be verified that all the tests passed correctly.
+and follow the instructions. It must be verified that all the tests passed correctly.
 
 To test the Cypress tests, it can be done in two different ways: the first is to run the tests in the background and obtain a report on the console of the tests carried out, this is done with the command:
 ```
