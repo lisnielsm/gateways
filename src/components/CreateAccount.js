@@ -23,7 +23,9 @@ const CreateAccount = () => {
     async function createAccount() {
         try {
             const userAuth = await register(name, email, password);
-
+            
+            dispatch(srvGateways.action.clearGateways);
+            
             dispatch(srvUser.action.logout());
 
             dispatch(srvUser.action.login({
@@ -32,7 +34,7 @@ const CreateAccount = () => {
                 displayName: userAuth.displayName,
                 photoUrl: userAuth.photoURL,
             }));
-            dispatch(srvGateways.action.clearGateways);
+            
             return navigate("/")
         } catch (error) {
             console.error("There was an error creating the user ", error.message);

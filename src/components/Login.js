@@ -29,6 +29,8 @@ const Login = () => {
     async function initSession() {
 
         try {
+            dispatch(srvGateways.action.clearGateways);
+            
             dispatch(srvUser.action.logout());
 
             const userAuth = await login(email, password);
@@ -39,8 +41,6 @@ const Login = () => {
                 displayName: userAuth.user.displayName,
                 photoUrl: userAuth.user.photoURL,
             }));
-
-            dispatch(srvGateways.action.clearGateways);
 
             return navigate("/");
         } catch (error) {
