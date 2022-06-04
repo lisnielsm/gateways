@@ -67,7 +67,6 @@ const Login = () => {
                 data-testid="form"
                 autoComplete="off"
                 onSubmit={onSubmitLogin}
-                onError={errors => console.debug(errors)}
                 noValidate={true}
             >
                 <div className="login-form mt1 col-xs-12">

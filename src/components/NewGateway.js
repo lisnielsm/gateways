@@ -118,7 +118,6 @@ const NewGateway = () => {
                 data-cy="newGatewayForm"
                 autoComplete="off"
                 onSubmit={onSubmitCreate}
-                onError={errors => console.debug(errors)}
                 noValidate={true}
             >
                 <div data-cy="gatewayContainer" className="login-form col-12">

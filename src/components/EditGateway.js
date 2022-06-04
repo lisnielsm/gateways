@@ -135,7 +135,6 @@ const EditGateway = () => {
             <ValidatorForm
                 autoComplete="off"
                 onSubmit={submitEditGateway}
-                onError={errors => console.debug(errors)}
                 noValidate={true}
             >
                 <div data-cy="gatewayContainer" className="login-form col-12">

@@ -54,7 +54,6 @@ const DetailsGateway = () => {
             <ValidatorForm
                 autoComplete="off"
                 onSubmit={() => { return; }}
-                onError={errors => console.debug(errors)}
                 noValidate={true}
             >
 

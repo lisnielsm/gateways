@@ -14,7 +14,6 @@ test("<Header /> Load the header and make sure everything is correct", () => {
         </Provider>
     </Router>);
 
-
     expect(screen.getByText("Gateways")).toBeInTheDocument();
     expect(screen.getByTestId("logo").tagName).toBe("DIV");
     expect(screen.getByTestId("logo").tagName).not.toBe("P");

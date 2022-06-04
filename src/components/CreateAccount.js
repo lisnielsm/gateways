@@ -52,7 +52,6 @@ const CreateAccount = () => {
             <ValidatorForm
                 autoComplete="off"
                 onSubmit={onSubmitCreate}
-                onError={errors => console.debug(errors)}
                 noValidate={true}
             >
                 <div className="login-form col-12">
